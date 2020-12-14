@@ -1,0 +1,8 @@
+{
+  "total_rows": 1465428,
+  "offset": 0,
+  "rows": [
+    { "id": "azure-mgmt-store", "key": "azure-mgmt-store", "value": { "rev": "1-b2f9c92a8eccb3cbe4ceb5af9b404ad0" } },
+    { "id": "azure-mgmt-subscription", "key": "azure-mgmt-subscription", "value": { "rev": "1-ed211a6b28ca7998131bc4558bdfa147" } }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "name": "validate-name",
+  "version": "0.0.0",
+  "description": "Check npm package name validity and similarity.",
+  "author": {
+    "name": "Özüm Eldoğan",
+    "email": "ozum@ozum.net",
+    "url": "https://github.com/ozum"
+  },
+  "keywords": [
+    "npm",
+    "package",
+    "name",
+    "valid",
+    "similarity",
+    "E403"
+  ],
+  "engines": {
+    "node": ">= 12.0.0"
+  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "!dist/**/@(*.spec|*.test)*",
+    "!dist/**/__test__",
+    "module-files",
+    "@types"
+  ],
+  "bin": "dist/index.js",
+  "homepage": "https://github.com/ozum/validate-name#readme",
+  "bugs": {
+    "url": "https://github.com/ozum/validate-name/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ozum/validate-name.git"
+  },
+  "license": "MIT",
+  "scripts": {
+    "execute": "ts-node --transpile-only --compiler-options '{ \"module\": \"commonjs\" }'",
+    "watch": "ts-node-dev --no-notify --respawn --transpile-only --compiler-options '{ \"module\": \"commonjs\" }'",
+    "lint": "eslint --ignore-path .gitignore --cache --max-warnings 0 --ext js,jsx,ts,tsx,vue --fix .",
+    "format": "prettier --write",
+    "release": "npm run readme && git pull && git add -A && git commit && git push --follow-tags",
+    "test": "jest --coverage",
+    "readme": "if grep -q '{% include \"api.md\" %}' 'README.njk'; then npm run typedoc:single-md; mkdir -p temp && mv api.md temp/; fi && readmeasy --partial-dirs temp,module-files/template-partials && rm -rf temp",
+    "build": "tsc --incremental",
+    "postinstall": "is-ci || husky install",
+    "postpublish": "pinst --enable",
+    "prepublishOnly": "pinst --disable",
+    "yo:update": "yo tsmod:uninstall --no-install --force && yo tsmod"
+  },
+  "dependencies": {
+    "proload": "^1.0.0-beta.4",
+    "validate-npm-package-name": "^3.0.0",
+    "yargs": "^16.2.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-conventional": "^11.0.0",
+    "@types/jest": "^26.0.19",
+    "@types/node": "^14.14.13",
+    "@types/node-fetch": "^2.5.7",
+    "@types/progress": "^2.0.3",
+    "@types/request": "^2.48.5",
+    "@types/validate-npm-package-name": "^3.0.2",
+    "@typescript-eslint/eslint-plugin": "^4.9.1",
+    "@typescript-eslint/parser": "^4.9.1",
+    "commitizen": "^4.1.2",
+    "eslint": "^7.15.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-config-prettier": "^7.0.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jest": "^24.1.3",
+    "eslint-plugin-prettier": "^3.3.0",
+    "husky": "^5.0.6",
+    "is-ci": "^2.0.0",
+    "jest": "^26.6.3",
+    "lint-staged": "^10.5.3",
+    "pinst": "^2.1.1",
+    "prettier": "^2.2.1",
+    "readmeasy": "^0.2.7",
+    "ts-jest": "^26.2.0",
+    "ts-node-dev": "^1.1.1",
+    "tslib": "^2.0.1",
+    "typescript": "^4.1.3"
+  }
+}
