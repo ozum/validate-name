@@ -1,32 +1,8 @@
 # validate-name
 
-Check npm package name validity and similarity, whether package name is
+Check similar names in npm registry.
 
-- similar to an existing package name in NPM registry.
-- valid package name.
-
-# Usage
-
-## After Installation
-
-```sh
-validate-name my-package
-```
-
-## Without Installation
-
-```sh
-npx validate-name my-package
-```
-
-## Max Age
-
-Use downloaded module list file for 1440 minutes (24 hours).
-
-```sh
-validate-name my-package --max-age 1440
-```
-
+Upon first use it downloads all module names from npm registry. Subsequent downloads include only updated modules names and are much smaller.
 
 # Installation
 
@@ -34,13 +10,17 @@ validate-name my-package --max-age 1440
 npm install -g validate-name
 ```
 
-# Details
+# Usage
 
-At first usage, this utility downloads list of all npm module names (apprx. 100-200 MB) and uses it to check whether your choosen name is syntacticly valid and not similar to name of an existing package.
+```sh
+validate-npm-name my-package
+```
 
-File will be re-downloaded if it is older than `max-age` option (default 24 hours)
+-Don't update downloaded file if it is updated in last 1440 minutes (24 hours). Default is 60 minutes.
 
- please wait until module names are downloaded. Downloaded file will be used for 24 hours to prevent re-download for every check.
+```sh
+validate-npm-name my-package --max-age 1440
+```
 
 # Note
 
