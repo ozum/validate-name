@@ -25,3 +25,7 @@ validate-npm-name my-package --max-age 1440
 # Note
 
 This module is based on best effort. NPM's similarity algorithm is not open source, so this similarity check can not guarantee validity of your package name.
+
+# Contributions
+
+Thanks to [RobC](https://stackoverflow.com/users/1611459/robc) for the idea and Regular Expression. Original script is [here](https://paste.ee/p/DdxFJ) created by [RobC](https://stackoverflow.com/users/1611459/robc).

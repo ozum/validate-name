@@ -4,6 +4,9 @@ const CHARSET = "[_\\.\\-]*?";
 /**
  * Return RegExp pattern for given package name.
  *
+ * @author RobC <jsmith@example.com>
+ * @see https://stackoverflow.com/users/1611459/robc
+ *
  * @param pkgName is the package name to get RegExp.
  * @returns RegExp for given package name.
  */
