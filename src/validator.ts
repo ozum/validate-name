@@ -12,7 +12,7 @@ const FetchProgress = require("node-fetch-progress");
 const changes = require("concurrent-couch-follower");
 const endOfStream = require("end-of-stream");
 
-const { writeFile } = promises;
+const { writeFile, mkdir } = promises;
 
 const URL_ALL = "https://replicate.npmjs.com/_all_docs";
 const INFO_URL = "https://replicate.npmjs.com/";
@@ -279,6 +279,7 @@ export default class Validator {
    * @returns lines to log.
    */
   public static async validate(pkgName: string, { maxAge = 60, downloadsDir = join(__dirname, "../downloads") } = {}): Promise<string[]> {
+    await mkdir(downloadsDir, { recursive: true });
     return new Validator({ maxAge, downloadsDir }).validate(pkgName);
   }
 }
