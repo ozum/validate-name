@@ -15,29 +15,35 @@ export default function getRegExp(pkgName: string): RegExp {
     pkgName
       .split("")
       .map((char, i, arr) => {
-        // If last letter is `s` then add `?` qualifier (i.e. zero or one)
-        // to test for non-plural instances.
-        if (arr.length - 1 === i && char === "s") char += "?";
+        // 1. If the last letter is `s` then add `?` qualifier
+        //    (i.e. zero or one) to test for non-plural instances.
+        if (arr.length - 1 === i && char === "s") {
+          char += "?";
+        }
 
-        // If character equals `-`, `_`, or `.` then add `*?` qualifier
-        // (i.e. zero to unlimited) to test for names without `-`, `_`, or `.`
-        return char === "-" || char === "_" || char === "." ? `${char}*?` : char;
+        // 2. Escape `.` character to handle it as a literal, then add `*?`
+        //    qualifier (i.e. zero to unlimited) to test for names without `.`
+        if (char === ".") return `\\${char}*?`;
+
+        // 3. If character equals `-` or `_` then add `*?` qualifier
+        //    (i.e. zero to unlimited) to test for names without `-` or `_`
+        return char === "-" || char === "_" ? `${char}*?` : char;
       })
 
-      // Insert $CHARSET between each letter
+      // 4. Insert $CHARSET between each letter
       .join(CHARSET)
 
-      // Prefix string with $CHARSET
+      // 5. Prefix string with $CHARSET
       .replace(/^/, CHARSET)
 
-      // Suffix string with $CHARSET
+      // 6. Suffix string with $CHARSET
       .replace(/$/, CHARSET)
 
-      // Prefix string with ^
+      // 7. Prefix string with ^
       .replace(/^/, "^")
 
-      // Suffix string with `s` and `?` qualifier
-      // (i.e. zero or one) to test for plural names.
+      // 8. Suffix string with `s` and `?` qualifier
+      //    (i.e. zero or one) to test for plural names.
       .concat("[s]?$"),
     "g"
   );
