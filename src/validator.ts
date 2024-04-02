@@ -14,8 +14,6 @@ const endOfStream = require("end-of-stream");
 
 const { writeFile, mkdir } = promises;
 
-const URL_ALL = "https://replicate.npmjs.com/_all_docs";
-const INFO_URL = "https://replicate.npmjs.com/";
 const TICK = process.platform === "win32" ? "√" : "✔";
 const CROSS = process.platform === "win32" ? "×" : "✖";
 
@@ -38,13 +36,17 @@ export default class Validator {
   #maxAge: number;
   #approximateFullDownloadSize?: number;
   #downloadsDir: string;
+  #url: string;
+  #urlAll: string;
 
   readonly #SEQUENCE_FILE: string;
   readonly #REGISTRY_FILE: string;
 
-  constructor(options: { maxAge: number; downloadsDir: string }) {
+  constructor(options: { maxAge: number; downloadsDir: string; url?: string; urlAll?: string }) {
     this.#maxAge = options.maxAge;
     this.#downloadsDir = options.downloadsDir;
+    this.#url = options.url ?? "https://replicate.npmjs.com/";
+    this.#urlAll = options.urlAll ?? "https://replicate.npmjs.com/_all_docs";
 
     this.#SEQUENCE_FILE = join(this.#downloadsDir, ".sequence");
     this.#REGISTRY_FILE = join(this.#downloadsDir, "npm-registry.json");
@@ -57,7 +59,7 @@ export default class Validator {
   /** Fetches small summary data. This data is used for decision process for further operations. */
   private async cacheRemoteInfo(): Promise<void> {
     Validator.log("Updating info from remote npm registry server.");
-    const response = await fetch(INFO_URL);
+    const response = await fetch(this.#url);
     const data = await response.json();
     this.#cacheRemoteSequence = data.update_seq as number;
     this.#approximateFullDownloadSize = Math.round(data.doc_count / 9.3); // Very rough empiric download size (in KB), because no content-size header is available.
@@ -66,7 +68,7 @@ export default class Validator {
 
   /** Fetches all module names and sequence number, then writes them to data and sequence file. */
   private async fetchAll(): Promise<void> {
-    const [remoteSequence, response] = await Promise.all([this.getRemoteSequence(), fetch(URL_ALL)]);
+    const [remoteSequence, response] = await Promise.all([this.getRemoteSequence(), fetch(this.#urlAll)]);
     const progress = new FetchProgress(response, { throttle: 100 });
     const sizeKB = await this.getApproximateFullDownloadSize(response.headers.get("content-length"));
     const sizeMB = Math.round(sizeKB / 1024);
@@ -128,7 +130,7 @@ export default class Validator {
       };
 
       const pressure = changes(dataHandler, {
-        db: INFO_URL,
+        db: this.#url,
         include_docs: false,
         sequence: this.#SEQUENCE_FILE,
         now: false,
@@ -278,8 +280,16 @@ export default class Validator {
    * @param downloadsDir is the directory to download files to.
    * @returns lines to log.
    */
-  public static async validate(pkgName: string, { maxAge = 60, downloadsDir = join(__dirname, "../downloads") } = {}): Promise<string[]> {
+  public static async validate(
+    pkgName: string,
+    {
+      maxAge = 60,
+      downloadsDir = join(__dirname, "../downloads"),
+      url,
+      urlAll,
+    }: { maxAge?: number; downloadsDir?: string; url?: string; urlAll?: string } = {}
+  ): Promise<string[]> {
     await mkdir(downloadsDir, { recursive: true });
-    return new Validator({ maxAge, downloadsDir }).validate(pkgName);
+    return new Validator({ maxAge, downloadsDir, url, urlAll }).validate(pkgName);
   }
 }

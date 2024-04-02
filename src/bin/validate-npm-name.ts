@@ -21,6 +21,8 @@ const { argv } = yargs
     args.positional("packageName", { type: "string", demandOption: true, describe: "Package name to validate." })
   )
   .option("maxAge", { type: "number", description: "Time in minutes before re-download list of all modules.", default: 60 })
+  .option("url", { type: "string", description: "URL to get info for package names.", default: "https://replicate.npmjs.com/" })
+  .option("urlAll", { type: "string", description: "URL to get all package names.", default: "https://replicate.npmjs.com/_all_docs" })
   .help()
   .strict();
 
