@@ -12,7 +12,7 @@ export async function readFileSafe(file: string): Promise<string | undefined> {
   try {
     return await readFile(file, { encoding: "utf8" });
   } catch (error) {
-    if (error.code === "ENOENT") return undefined;
+    if (typeof error === "object" && error !== null && "code" in error && error.code === "ENOENT") return undefined;
     throw error;
   }
 }
@@ -27,7 +27,7 @@ async function getFileModificationTime(file: string): Promise<Date | undefined> 
   try {
     return (await stat(file)).mtime;
   } catch (error) {
-    if (error.code === "ENOENT") return undefined;
+    if (typeof error === "object" && error !== null && "code" in error && error.code === "ENOENT") return undefined;
     throw error;
   }
 }
@@ -43,7 +43,7 @@ export async function readJSON<T>(file: string): Promise<T | undefined> {
     const content = await readFileSafe(file);
     return content !== undefined ? JSON.parse(content) : undefined;
   } catch (error) {
-    if (error.message.includes("Unexpected end of JSON")) return unlink(file) as Promise<undefined>;
+    if (error instanceof Error && error.message.includes("Unexpected end of JSON")) return unlink(file) as Promise<undefined>;
     throw error;
   }
 }
