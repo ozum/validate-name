@@ -22,6 +22,12 @@ validate-npm-name my-package
 validate-npm-name my-package --max-age 1440
 ```
 
+Use your own NPM server
+
+```sh
+validate-npm-name my-package --url https://my.server.com --urlAll https://my.server.com/_all_docs
+```
+
 # Note
 
 This module is based on best effort. NPM's similarity algorithm is not open source, so this similarity check can not guarantee validity of your package name.
